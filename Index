@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora MIR</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6f9;
+  padding:40px;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.tabs button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  background:#ddd;
+}
+
+.tabs button.active{
+  background:#0f2f57;
+  color:white;
+}
+
+.section{ display:none; }
+.section.active{ display:block; }
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button.calc{
+  background:#ffc83d;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+}
+
+.result{
+  margin-top:15px;
+  padding:10px;
+  border-radius:8px;
+  background:#0f2f57;
+  color:white;
+}
+
+.note{
+  margin-top:10px;
+  font-size:12px;
+  color:#555;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Calculadora de Envíos</h2>
+
+<div class="tabs">
+  <button onclick="openTab('aereo')" class="active" id="tabA">✈️ Aéreo</button>
+  <button onclick="openTab('maritimo')" id="tabM">🚢 Marítimo</button>
+  <button onclick="openTab('volumen')" id="tabV">📦 Volumen</button>
+</div>
+
+<!-- AEREO -->
+<div id="aereo" class="section active">
+  <input type="number" id="aereoLbs" placeholder="Ingrese libras">
+  <button class="calc" onclick="calcAereo()">Calcular</button>
+  <div class="result" id="resA"></div>
+</div>
+
+<!-- MARITIMO -->
+<div id="maritimo" class="section">
+  <input type="number" id="marLbs" placeholder="Ingrese libras">
+  <button class="calc" onclick="calcMar()">Calcular</button>
+  <div class="result" id="resM"></div>
+</div>
+
+<!-- VOLUMEN -->
+<div id="volumen" class="section">
+  <input type="number" id="L" placeholder="Largo (in)">
+  <input type="number" id="W" placeholder="Ancho (in)">
+  <input type="number" id="H" placeholder="Alto (in)">
+  <button class="calc" onclick="calcVol()">Calcular</button>
+  <div class="result" id="resV"></div>
+  <div class="note">
+    El precio puede variar si las cantidades no están correctas, el artículo no está empacado o si el peso es demasiado para el artículo.
+  </div>
+</div>
+
+</div>
+
+<script>
+function openTab(tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+
+  document.getElementById(tab).classList.add('active');
+  if(tab==='aereo') document.getElementById('tabA').classList.add('active');
+  if(tab==='maritimo') document.getElementById('tabM').classList.add('active');
+  if(tab==='volumen') document.getElementById('tabV').classList.add('active');
+}
+
+function calcAereo(){
+  let lbs = parseFloat(document.getElementById("aereoLbs").value);
+  if(!lbs) return;
+
+  let rate = lbs > 20 ? 6.5 : 7;
+  let total = lbs * rate;
+
+  document.getElementById("resA").innerHTML =
+    "Tarifa aplicada: $" + rate + " por lb<br>Total: $" + total.toFixed(2);
+}
+
+function calcMar(){
+  let lbs = parseFloat(document.getElementById("marLbs").value);
+  if(!lbs) return;
+
+  let rate = 2.05;
+  if(lbs > 500) rate = 1.5;
+  else if(lbs > 300) rate = 1.9;
+  else if(lbs > 100) rate = 2;
+
+  let total = lbs * rate;
+
+  document.getElementById("resM").innerHTML =
+    "Tarifa aplicada: $" + rate + " por lb<br>Total: $" + total.toFixed(2);
+}
+
+function calcVol(){
+  let L = parseFloat(document.getElementById("L").value);
+  let W = parseFloat(document.getElementById("W").value);
+  let H = parseFloat(document.getElementById("H").value);
+  if(!L || !W || !H) return;
+
+  let cubicaje = (L*W*H)/1728;
+  let total = cubicaje * 10;
+
+  document.getElementById("resV").innerHTML =
+    "Cubicaje: " + cubicaje.toFixed(2) + " pies³<br>Total: $" + total.toFixed(2);
+}
+</script>
+
+</body>
+</html>
